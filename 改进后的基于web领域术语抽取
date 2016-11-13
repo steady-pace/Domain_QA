@@ -1,0 +1,71 @@
+#!/usr/bin/env python
+# -*- coding: gb2312 -*-
+from gensim.models  import word2vec  #上面的编码变成 utf8,gb2312都可以
+import gensim
+import os
+
+
+class MySentences(object):
+    def __init__(self, dirname):
+        self.dirname = dirname
+
+    def __iter__(self):
+        for fname in os.listdir(self.dirname):
+            for line in open(os.path.join(self.dirname, fname)):
+                yield line.split()
+
+sentences = MySentences('D:\\手机-预处理后\\')#('D:\\手机-正文\\花卉\\')
+model = gensim.models.Word2Vec(sentences,min_count=2,size=500)
+model.save('D:\\model\\mymodelphone')
+new_model = gensim.models.Word2Vec.load('D:\\model\\mymodelphone')
+
+list=new_model.most_similar('小米',topn=20)
+#print(list[1][0])
+#for s in list:
+ #   t=s[0]
+    #print t.decode('utf8')  ##这样就好了。不需要encode
+  #  print (t)
+
+#list=new_model.most_similar('牡丹')
+#print(list[1][0])
+
+for s in list:
+    t=s[0]
+    print t,s[1]#.decode('utf8')  ##这样就好了。不需要encode
+    print s[1]
+                
+
+
+
+    
+    
+'''
+#读取当个文档，进行训练，进行测试
+
+sentences = []
+#sentences=word2vec.Text8Corpus("D:\\test.txt")
+
+f = open("D:\\test.txt", "r")
+for line in f.readlines():
+    # print "create %s"%line
+     sentences.append(line.split(" "))
+
+
+f.close()
+
+#print sentences
+model = word2vec.Word2Vec(sentences,min_count=3,size=50)
+
+# 如何打印出来 汉字,easy啊。直接打印list[0][0]
+
+list=model.most_similar('普吉岛')
+#print(list[1][0])
+for s in list:
+    t=s[0]
+    print t.decode('utf8')  ##这样就好了。不需要encode
+
+
+#s="蒙牛 -- 伊利 间的余弦距离："
+#print s.decode('utf-8')
+#print model.similarity('旅游','中国')
+'''
